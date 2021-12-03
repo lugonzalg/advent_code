@@ -6,7 +6,7 @@
 /*   By: lugonzal <lugonzal@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:56:20 by lugonzal          #+#    #+#             */
-/*   Updated: 2021/12/03 14:24:03 by lugonzal         ###   ########.fr       */
+/*   Updated: 2021/12/03 16:32:59 by lugonzal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,50 +17,65 @@
 #include "../libft/inc/libft.h"
 #include "../libft/inc/get_next_line.h"
 
-static int ft_get_num(int fd, bool *status)
+static void	ft_check_binary(int bit_rate[12][2], char *line)
 {
-	int	num;
-	char	*line;
+	size_t	j;
 
-	line = get_next_line(fd);
-	if (!line)
+	j = 0;	
+	while (line[j] && line[j] != 10)
 	{
-		*status = false;
-		return (0);
+		line[j] -= 48;
+		if (line[j])
+			bit_rate[j][1]++;
+		else
+			bit_rate[j][0]++;
+		j++;
 	}
-	num = ft_atoi(line);
-	free(line);
-	return (num);
+}
+
+static char	**ft_binary_result(int bit_rate[12][2])
+{
+	static char	*epsilon[2];
+	size_t		j;
+
+	j = -1;
+	epsilon[0] = ft_calloc(sizeof(char), 13);
+	epsilon[1] = ft_calloc(sizeof(char), 13);
+	while (++j < 12)
+	{
+		if (bit_rate[j][1] > bit_rate[j][0])
+		{
+			epsilon[0][j] = '1';	
+			epsilon[1][j] = '0';	
+		}
+		else
+		{
+			epsilon[0][j] = '0';	
+			epsilon[1][j] = '1';	
+		}
+	}
+	return (epsilon);
 }
 
 int	main(void)
 {	
-	int		fd;
-	size_t	result;
-	int		sum[5];
-	bool	status;
-	size_t	i;
+	char		*line;
+	int			fd;
+	static int	bit_rate[12][2];
+	char		**result;
 
-	i = 0;
-	status = 1;
-	result = 0;
-	fd = open("input_3", O_RDONLY);
-	sum[0] = ft_get_num(fd, &status);
-	sum[1] = ft_get_num(fd, &status);
-	sum[2] = ft_get_num(fd, &status);
-	sum[3] = sum[0] + sum[1] + sum[2];
+	fd = open("1", O_RDONLY);
 	while (1)
 	{
-		sum[i] = ft_get_num(fd, &status);
-		sum[4] = sum[0] + sum[1] + sum[2];
-		if (!status)
+		line = get_next_line(fd);
+		if (!line)
 			break ;
-		if (sum[4] > sum[3])
-			result++;
-		sum[3] = sum[4];
-		i++;
-		if (i == 3)
-			i = 0;
+		ft_check_binary(bit_rate, line);
+		free(line);
 	}
-	printf("%zu", result);
+	result = ft_binary_result(bit_rate);
+	printf("RESULT_1: %s\n", result[0]);
+	printf("RESULT_2: %s", result[1]);
+	free(result[0]);
+	free(result[1]);
 }

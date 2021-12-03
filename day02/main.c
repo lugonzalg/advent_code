@@ -6,7 +6,7 @@
 /*   By: lugonzal <lugonzal@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:56:20 by lugonzal          #+#    #+#             */
-/*   Updated: 2021/12/02 16:07:49 by lugonzal         ###   ########.fr       */
+/*   Updated: 2021/12/03 13:53:02 by lugonzal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,29 @@ int	main(void)
 {	
 	int		ho_pos;
 	int		deph;
+	int		aim;
 	int		fd;
 	char	**parsed;
 
 	ho_pos = 0;
 	deph = 0;
-	fd = open("input.txt", O_RDONLY);
+	aim = 0;
+	fd = open("input_2.txt", O_RDONLY);
 	while (1)
 	{
 		parsed = ft_get_move(fd);
 		if (!parsed)
 			break ;
 		if (!ft_strncmp(parsed[0], "forward", sizeof("forward")))
+		{
 			ho_pos += ft_atoi(parsed[1]);
+			if (aim)
+				deph += ft_atoi(parsed[1]) * aim;
+		}
 		else if (!ft_strncmp(parsed[0], "down", sizeof("down")))
-			deph += ft_atoi(parsed[1]);
+			aim += ft_atoi(parsed[1]);
 		else if (!ft_strncmp(parsed[0], "up", sizeof("up")))
-			deph -= ft_atoi(parsed[1]);
+			aim -= ft_atoi(parsed[1]);
 	}
 	printf("%d", deph * ho_pos);
 }
