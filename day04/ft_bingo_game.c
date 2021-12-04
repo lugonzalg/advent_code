@@ -6,13 +6,12 @@
 /*   By: lugonzal <lugonzal@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 15:52:50 by lugonzal          #+#    #+#             */
-/*   Updated: 2021/12/04 19:44:22 by lugonzal         ###   ########.fr       */
+/*   Updated: 2021/12/04 20:34:57 by lugonzal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include "bingo.h"
 #include "../libft/inc/libft.h"
 
@@ -31,7 +30,7 @@ extern size_t	ft_mark_board(t_node *head, char **list, size_t j)
 			k = -1;
 			while (head && head->board[i][++k])
 			{
-				if (ft_strncmp(head->board[i][k], list[j], 4))
+				if (ft_strncmp(head->board[i][k], list[j], 3))
 					continue ;
 				free(head->board[i][k]);
 				head->board[i][k] = ft_strdup("x");
@@ -78,7 +77,6 @@ static bool	ft_checkrow(t_node *head)
 		if (i == 5)
 			return (true);
 		j++;
-		head = head->next;
 	}
 	return (false);
 }
@@ -103,12 +101,32 @@ static int	ft_sumboard(t_node *head)
 	return (sum);
 }
 
+extern void	print_table(char ***board)
+{
+	size_t	i;
+	size_t	j;
+
+	i = -1;
+	while (board[++i])
+	{
+		j = -1;
+		while (board[i][++j])
+			printf("%s ", board[i][j]);
+		printf("\n");
+	}
+}
+
 extern int	ft_winner(t_node *head, char **list, size_t j)
 {
 	while (head)
 	{
-		if (ft_checkcol(head->board) || ft_checkrow(head))
-			return (ft_sumboard(head) * ft_atoi(list[j - 1]));
+		if (!head->winner && (ft_checkcol(head->board) || ft_checkrow(head)))
+		{
+			g_n--;
+			head->winner = true;
+			if (!g_n)
+				return (ft_sumboard(head) * ft_atoi(list[j]));
+		}
 		head = head->next;
 	}
 	return (0);

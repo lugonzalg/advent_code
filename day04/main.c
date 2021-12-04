@@ -6,7 +6,7 @@
 /*   By: lugonzal <lugonzal@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:56:20 by lugonzal          #+#    #+#             */
-/*   Updated: 2021/12/04 19:44:22 by lugonzal         ###   ########.fr       */
+/*   Updated: 2021/12/04 20:34:56 by lugonzal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static t_node	*ft_occurrence(char **num_list)
 		line =  get_next_line(fd);
 		if (!line)
 			break ;
+		g_n++;
 		node = ft_calloc(sizeof(t_node), 1);
 		ft_fill_node(node, fd);
 		ft_lst_addback(&head, node);
@@ -86,7 +87,7 @@ static int	ft_bingo_game(t_node *head, char *num_list)
 	{
 		j = ft_mark_board(head, list, j);
 		if (j > 4)
-			winner = ft_winner(head, list, j);
+			winner = ft_winner(head, list, j - 1);
 		if (winner)
 			break ;
 	}
@@ -99,6 +100,7 @@ int	main(void)
 	t_node	*head;
 	int		winner;
 
+	g_n = 0;
 	head = ft_occurrence(&num_list);
 	winner = ft_bingo_game(head, num_list);
 	printf("%d", winner);
