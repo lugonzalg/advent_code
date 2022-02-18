@@ -4,7 +4,8 @@ LIB		= -L /Users/lugonzal/Cursus_42/advent -lft
 INC		= -I /Users/lugonzal/Cursus_42/advent/libft/inc
 CC		= clang
 CFLAGS	= -Wall -Werror -Wextra -fsanitize=address -g3
-FILES	= main \
+FILES	= ft_part2 \
+		  ft_get_num
 
 OBJS 	= $(addsuffix .o, $(FILES))
 SRCS 	= $(addsuffix .c, $(FILES))

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_part2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lugonzal <lugonzal@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/02 13:56:20 by lugonzal          #+#    #+#             */
-/*   Updated: 2021/12/08 17:13:13 by lugonzal         ###   ########.fr       */
+/*   Created: 2021/12/08 16:28:37 by lugonzal          #+#    #+#             */
+/*   Updated: 2021/12/08 18:34:59 by lugonzal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "libft.h"
+#include "nums.h"
 #include "get_next_line.h"
 
-static void	ft_free_d2(char **tab)
+extern void	ft_free_d2(char **tab)
 {
 	size_t	i;
 
@@ -27,7 +28,7 @@ static void	ft_free_d2(char **tab)
 	free(tab);
 }
 
-static void	ft_get_nums(char *list[4], char *decrypt, size_t sz, size_t l_sz)
+static void	ft_get_nums(char *list[10], char *decrypt, size_t sz, size_t l_sz)
 {
 	char	**parse;
 	size_t	i;
@@ -44,19 +45,13 @@ static void	ft_get_nums(char *list[4], char *decrypt, size_t sz, size_t l_sz)
 			if (!list[l_sz])
 				return ;
 			ft_free_d2(parse);
-			if (sz < 5)
-			{
-				if (sz == 4)
-					sz = 6;
-				ft_get_nums(list, decrypt, sz + 1, l_sz + 1);
-			}
 			break ;
 		}
 	}
 
 }
 
-static void	ft_decrypt(size_t num_list[4], char *list[4], char *str)
+static void	ft_decrypt(size_t num_list[10], char *list[10], char *str)
 {
 	char	**tab;
 	size_t	i;
@@ -87,35 +82,47 @@ static void	ft_decrypt(size_t num_list[4], char *list[4], char *str)
 
 }
 
-static int	*ft_part1(size_t num_list[4])
+static void	ft_set_list(char *list[10], char *str)
+{
+	ft_get_nums(list, str, 2, 1);
+	ft_get_nums(list, str, 3, 7);
+	ft_get_nums(list, str, 4, 4);
+	ft_get_nums(list, str, 8, 8);
+	ft_get_9(list, str, 6, 9);
+	ft_get_0(list, str, 6, 0);
+	ft_get_6(list, str, 6, 6);
+	ft_get_3(list, str, 5, 3);
+	ft_get_5(list, str, 5, 5);
+}
+
+static int	*ft_part2(size_t num_list[10])
 {
 	char	*line;
 	char	**decrypt;
 	int		fd;
-	char	*list[4];
+	char	*list[10];
 
-	fd = open("input1", O_RDONLY);
+	fd = open("input3", O_RDONLY);
 	while (1)
 	{
 		line = get_next_line(fd);
 		decrypt = ft_split(line, '|');
 		if (!line)
 			return (NULL);
-		ft_get_nums(list, decrypt[0], 2, 0);
+		ft_set_list(list, decrypt[0]);
 		free(decrypt[0]);
 		decrypt[1][ft_strlen(decrypt[1]) - 1] = 0;
 		ft_decrypt(num_list, list, decrypt[1]);
-		free(decrypt[1]);
 	}
 }
 
 int	main(void)
 {
-	size_t	num_list[4];
+	size_t	num_list[10];
 	size_t	sum;
 
-	ft_memset(num_list, 0, sizeof(size_t) * 4);
-	ft_part1(num_list);
+	ft_memset(num_list, 0, sizeof(size_t) * 10);
+	ft_part2(num_list);
 	sum = num_list[0] + num_list[1] + num_list[2] + num_list[3];
 	printf("SUM: %zd", sum);
 	return (0);
