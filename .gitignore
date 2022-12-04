@@ -1,3 +1,4 @@
 *.out
 *.sw*
 *.o
+libft
