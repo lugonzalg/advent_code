@@ -86,8 +86,6 @@ int main(int argc, char *argv[]) {
 		}
 
 	}
-	std::cerr << "Numbers size: " << numbers.size() << std::endl;
-	std::cerr << "Gears size: " << gears.size() << std::endl;
 	for (auto &gear: gears) {
 		for (auto &number: numbers) {
 			if (abs(number.y - gear.y) < 2 and (abs(number.x[0] - gear.x) < 2 or abs(number.x[1] - gear.x) < 2)) {
@@ -102,7 +100,6 @@ int main(int argc, char *argv[]) {
 		if (gear.count == 2)
 			sum += gear.sum;
 	}
-	std::cout << "SUM: " << sum << std::endl;
 
 	return 0;
 }
