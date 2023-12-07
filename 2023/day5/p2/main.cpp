@@ -47,22 +47,13 @@ int main(int argc, char *argv[]) {
 	long diff;
 	int pos = 0;
 	for (auto seed: seeds) {
-		for (size_t j = 0; j < seeds[pos]; j++) {
-
-			for (auto &data: v) {
-				for (size_t i = 0; i < data.size(); i += 3) {
-					diff = abs(data[i + SRC] - seed);
-					if (diff <= data[i + RANGE] and data[i + SRC] <= seed) {
-						seed = data[i + DST] + diff;
-						break ;
-					}
-				}
+		dst = min(seed, dst);
+		for (auto &data: v) {
+			for (size_t i = 0; i < data.size(); i += 3) {
+				if (data[i + DST] >= dst)
+					dst = min(dst, data[i + DST]);
 			}
-
-		dst = min(dst, seed);
-		seed++;
 		}
-		pos += 2;
 	}
 	cout << "Min: " << dst << endl;
 
