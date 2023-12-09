@@ -42,12 +42,14 @@ typedef struct s_player {
 
 	int score; //combinacion
 	int bet; //apuesta
-	vector<int> cards; //mayores cartas
+	vector<pair<int, int> > cards; //mayores cartas
 
 }	t_player;
 
-static bool sort_hand(int card1, int card2) {
-	return card1 >= card2;
+static bool sort_hand(pair<int, int> card1, pair<int, int> card2) {
+	if (card1.first < card2.first) return false;
+	if (card1.second >= card2.second) return false;
+	return true;
 }
 
 static bool sort_players(t_player &p1, t_player &p2) {
@@ -55,8 +57,8 @@ static bool sort_players(t_player &p1, t_player &p2) {
 	if (p1.score > p2.score) return false;
 	if (p1.score < p2.score) return true;
 	for (size_t i = 0; i < p1.cards.size() and i < p2.cards.size(); i++) {
-		if (p1.score >= p2.score and p1.cards[i] > p2.cards[i]) return false;
-		if (p1.score >= p2.score and p1.cards[i] < p2.cards[i]) return true;
+		if (p1.score >= p2.score and p1.cards[i].second > p2.cards[i].second) return false;
+		if (p1.score >= p2.score and p1.cards[i].second < p2.cards[i].second) return true;
 	}
 	return true;
 }
@@ -91,24 +93,22 @@ int main(int argc, char *argv[]) {
 		t_player p;
 
 		p.score = 1;
-		p.cards.reserve(3);
 
 		for (idx = 0; line[idx] != ' '; idx++) {
 			uom[line[idx]].first++;
 
-			if (uom[line[idx]].first > 1) {
+			if (uom[line[idx]].first > 1)
 				p.score *= uom[line[idx]].first;
-				p.cards.push_back(uom[line[idx]].second);
-			}
 		}
 		while (!isdigit(line[idx])) idx++;
 		p.bet = stoi(&line[idx]);
-		int maxv = 0;
+
 		for (auto &elem: uom) {
-			if (elem.second.first == 1)
-				p.cards.push_back(elem.second.second);
+			if (elem.second.first)
+				p.cards.push_back(make_pair(elem.second.first, elem.second.second));
 			elem.second.first = 0;
 		}
+
 		sort(p.cards.begin(), p.cards.end(), sort_hand);
 		scores.push_back(p);
 		cout << line << endl;
